@@ -26,11 +26,11 @@ struct ProductDetailsView: View {
                     }
                     Spacer()
                     Button{
-                        
+                        addToLiked()
                     }label: {
                         Image(systemName: "heart.fill")
                             .font(.title2)
-                            .foregroundColor(Color.gray)
+                            .foregroundColor(isLiked() ? .red : Color.gray)
                     }
                 }
                 .padding()
@@ -86,9 +86,10 @@ struct ProductDetailsView: View {
                             .foregroundColor(Color("Primary"))
                     }
                     Button{
-                        
+                        addTocart()
+                       
                     }label: {
-                        Text("Add To Basket")
+                        Text("\(isInCart() ? "Remove from Cart" : "Add To Basket" )")
                             .font(.system(size: 10))
                             .bold()
                             .foregroundColor(.white)
@@ -122,6 +123,39 @@ struct ProductDetailsView: View {
                 Color.gray.opacity(0.2).ignoresSafeArea()
             }
             )
+    }
+    
+    func isLiked() -> Bool{
+        return sharedDataModel.likedProducts.contains { productnew in
+            productnew.id == product.id
+        }
+    }
+    
+    func isInCart() -> Bool{
+        return sharedDataModel.cartProducts.contains { productnew in
+            productnew.id == product.id
+        }
+    }
+    
+    
+    func addToLiked(){
+        if let index = sharedDataModel.likedProducts.firstIndex(where: { product in
+            return self.product.id == product.id
+        }){
+            sharedDataModel.likedProducts.remove(at: index)
+        } else{
+            sharedDataModel.likedProducts.append(self.product)
+        }
+    }
+    
+    func addTocart(){
+        if let index = sharedDataModel.cartProducts.firstIndex(where: { product in
+            return self.product.id == product.id
+        }){
+            sharedDataModel.cartProducts.remove(at: index)
+        } else{
+            sharedDataModel.cartProducts.append(self.product)
+        }
     }
 }
 

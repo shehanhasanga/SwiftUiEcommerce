@@ -17,11 +17,13 @@ struct MainView: View {
                 Home(animation:animation)
                     .environmentObject(shareViewModel)
                     .tag(Tab.Home)
-                Text("Liked")
+                LikedPage()
+                    .environmentObject(shareViewModel)
                     .tag(Tab.Liked)
                 ProfileView()
                     .tag(Tab.Profile)
-                Text("Cart")
+                CartPage()
+                    .environmentObject(shareViewModel)
                     .tag(Tab.Cart)
             }
             

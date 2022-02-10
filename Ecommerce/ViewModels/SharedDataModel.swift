@@ -11,4 +11,7 @@ class SharedDataModel:ObservableObject{
     @Published var showDetailsProduct:Bool = false
     
     @Published var fromSearchPage:Bool = false
+    
+    @Published var likedProducts:[Product] = []
+    @Published var cartProducts:[Product] = []
 }
