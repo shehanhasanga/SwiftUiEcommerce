@@ -12,7 +12,7 @@ struct MainView: View {
     var body: some View {
         VStack{
             TabView(selection: $currentTab) {
-                Text("home")
+                Home()
                     .tag(Tab.Home)
                 Text("Liked")
                     .tag(Tab.Liked)

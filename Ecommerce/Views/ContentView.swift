@@ -8,8 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("log_status") var log_status : Bool = false
     var body: some View {
-        OnBoardingView()
+        Group{
+            if log_status {
+                MainView()
+            } else {
+                OnBoardingView()
+            }
+        }
+//        OnBoardingView()
+//        Home()
     }
 }
 
