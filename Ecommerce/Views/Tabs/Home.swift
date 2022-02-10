@@ -9,7 +9,9 @@ import SwiftUI
 
 struct Home: View {
     @State var searchText = ""
-    @Namespace var animation
+    var animation: Namespace.ID
+    @EnvironmentObject var sharedDataModel:SharedDataModel
+    
     @StateObject var homeViewModel = HomeViewModel()
     var body: some View {
         ScrollView {
@@ -79,11 +81,11 @@ struct Home: View {
     }
 }
 
-struct Home_Previews: PreviewProvider {
-    static var previews: some View {
-        Home()
-    }
-}
+//struct Home_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Home()
+//    }
+//}
 
 extension Home {
     
@@ -165,9 +167,18 @@ extension Home {
     @ViewBuilder
     func ProductView(product: Product) -> some View {
         VStack{
-            Image(product.productImage)
-                .resizable()
-                .scaledToFit()
+            ZStack{
+                if sharedDataModel.showDetailsProduct{
+                    Image(product.productImage)
+                        .resizable()
+                        .scaledToFit()
+                } else{
+                    Image(product.productImage)
+                        .resizable()
+                        .scaledToFit()
+                        .matchedGeometryEffect(id: "\(product.id)image", in: animation)
+                }
+            }
                 .aspectRatio(1,contentMode: .fit)
                 .frame(width: getBounds().width / 2.5, height:  getBounds().width / 2.5)
                 .offset(y: -80)
@@ -195,6 +206,12 @@ extension Home {
                 .cornerRadius(35)
         )
         .padding(.top, 80)
+        .onTapGesture {
+            withAnimation {
+                sharedDataModel.detailsProduct = product
+                sharedDataModel.showDetailsProduct = true
+            }
+        }
     }
     
     @ViewBuilder

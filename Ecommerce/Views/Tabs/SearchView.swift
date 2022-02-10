@@ -10,12 +10,15 @@ import SwiftUI
 struct SearchView: View {
     var animation : Namespace.ID
     @EnvironmentObject var homeViewModel:HomeViewModel
+    @EnvironmentObject var sharedDataModel:SharedDataModel
     @FocusState var startTF:Bool 
     var body: some View {
         VStack{
             HStack(spacing:10){
                 Button{
                     homeViewModel.searchActivated = false
+                    homeViewModel.searchTxt = ""
+                    sharedDataModel.fromSearchPage = false
                 }label: {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -145,9 +148,19 @@ extension SearchView {
     @ViewBuilder
     func ProductView(product: Product) -> some View {
         VStack{
-            Image(product.productImage)
-                .resizable()
-                .scaledToFit()
+            ZStack{
+                if sharedDataModel.showDetailsProduct{
+                    Image(product.productImage)
+                        .resizable()
+                        .scaledToFit()
+                        .opacity(0)
+                } else{
+                    Image(product.productImage)
+                        .resizable()
+                        .scaledToFit()
+                        .matchedGeometryEffect(id: "\(product.id)search", in: animation)
+                }
+            }
                
                 .offset(y: -50)
                 .padding(.bottom , -50)
@@ -174,5 +187,13 @@ extension SearchView {
                 .cornerRadius(35)
         )
         .padding(.top, 50)
+        .onTapGesture {
+            withAnimation {
+                
+                sharedDataModel.detailsProduct = product
+                sharedDataModel.showDetailsProduct = true
+                sharedDataModel.fromSearchPage = true
+            }
+        }
     }
 }

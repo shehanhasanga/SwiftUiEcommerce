@@ -9,14 +9,17 @@ import SwiftUI
 
 struct MainView: View {
     @State var currentTab :Tab = .Home
+    @StateObject var shareViewModel = SharedDataModel()
+    @Namespace var animation
     var body: some View {
         VStack{
             TabView(selection: $currentTab) {
-                Home()
+                Home(animation:animation)
+                    .environmentObject(shareViewModel)
                     .tag(Tab.Home)
                 Text("Liked")
                     .tag(Tab.Liked)
-                Text("Profile")
+                ProfileView()
                     .tag(Tab.Profile)
                 Text("Cart")
                     .tag(Tab.Cart)
@@ -45,7 +48,18 @@ struct MainView: View {
                 }
             }
             .padding(.bottom, 20)
+            
         }
+        .overlay(
+            ZStack{
+                if let product = shareViewModel.detailsProduct, shareViewModel.showDetailsProduct {
+                    ProductDetailsView(product: product, animation: animation)
+                        .environmentObject(shareViewModel)
+                        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .opacity))
+                    
+                }
+            }
+        )
         
         
     }
